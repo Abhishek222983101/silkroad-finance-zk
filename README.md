@@ -1,83 +1,110 @@
-![SilkRoad Architecture](https://raw.githubusercontent.com/Abhishek222983101/silkroad-finance-zk/main/public/arch.png)
-
 <div align="center">
+  <img src="https://raw.githubusercontent.com/Abhishek222983101/silkroad-finance-zk/main/public/arch.png" alt="SilkRoad Architecture" width="100%" />
+  
+  <br />
+  
   <h1>SilkRoad Finance</h1>
   <h3>The First Stateless RWA Privacy Layer on Solana</h3>
+
   <p>
-    <strong>Winner Target: Light Protocol Track (ZK Compression) & Helius Track</strong>
+    <strong>🏆 Targeting: Light Protocol Track (ZK Compression) & Helius Track</strong>
   </p>
-  <p>
-    <a href="https://silkroad-finance-zk.vercel.app">Live Demo</a> |
-    <a href="https://www.youtube.com/watch?v=5LfyOQW3sJ8">Video Pitch</a> |
-    <a href="#-technical-architecture">Architecture</a>
+
+  <p align="center">
+    <a href="https://silkroad-finance-zk.vercel.app">
+      <img src="https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel" alt="Live Demo" />
+    </a>
+    <a href="https://www.youtube.com/watch?v=5LfyOQW3sJ8">
+      <img src="https://img.shields.io/badge/Video_Pitch-YouTube-red?style=for-the-badge&logo=youtube" alt="Video Pitch" />
+    </a>
+    <a href="#-technical-architecture">
+      <img src="https://img.shields.io/badge/Architecture-Deep_Dive-blue?style=for-the-badge&logo=solana" alt="Architecture" />
+    </a>
   </p>
 </div>
 
 ---
 
-## Executive Summary
+## 📖 Executive Summary
 
 **SilkRoad Finance** is a decentralized invoice factoring protocol built to bridge the gap between traditional supply chain finance and Web3 liquidity, **without compromising privacy**.
 
-Global suppliers often wait **60-90 days** to get paid (the "Cash Trap"). While they want to factor these invoices on-chain for instant liquidity, they cannot afford **"Radical Transparency."** Revealing client names and deal sizes on a public ledger lets competitors underbid them.
+In the current RWA landscape, suppliers face a "Transparency Paradox." To access on-chain liquidity, they must tokenize their invoices. However, doing so on a public ledger reveals their entire order book—client names, deal sizes, and margins—to competitors. This metadata leakage is the single biggest blocker for institutional adoption.
 
-**SilkRoad solves this.** We use **ZK Compression (Light Protocol)** to tokenize Real World Assets (RWA) as private, compressed state on Solana. This allows suppliers to access liquidity instantly while keeping their commercial data cryptographically concealed.
-
----
-
-## Demo & Walkthrough
-
-[![Watch the Video](https://img.youtube.com/vi/5LfyOQW3sJ8/0.jpg)](https://www.youtube.com/watch?v=5LfyOQW3sJ8)
-
-> *Click the image above to watch the 4-minute technical walkthrough.*
+**SilkRoad solves this.** We utilize **Light Protocol's ZK Compression** to tokenize Real World Assets as private, compressed state on Solana. This allows suppliers to access liquidity instantly while keeping their sensitive commercial data cryptographically concealed from the public eye.
 
 ---
 
-## Problem & Solution
+## 📹 Demo & Walkthrough
 
-### The Problem: The Transparency Paradox
-
-* **The Leak:** If a supplier mints an invoice for "Tesla" worth "$500,000" on a public chain, their competitors see it immediately.
-* **The Cost:** Standard Solana Token Accounts cost **~0.02 SOL** in rent. For high-volume supply chains (thousands of invoices), this creates significant friction.
-* **The Trust Gap:** Web2 solutions are private but centralized (banks). Web3 solutions are trustless but public.
-
-### The Solution: Stateless ZK Privacy
-
-SilkRoad provides a **Stateless** marketplace where assets are compressed and private by default.
-
-* **Zero-Knowledge Privacy:** Invoice metadata is hashed locally (`SHA256`). The chain only sees a validity proof, never the raw data.
-* **100x Lower Costs:** By using Light Protocol's **State Merkle Trees**, minting an asset costs **~0.001 SOL** (Rent-Exempt).
-* **Atomic Settlement:** Liquidity swaps happen in a single transaction.
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=5LfyOQW3sJ8">
+    <img src="https://img.youtube.com/vi/5LfyOQW3sJ8/0.jpg" alt="Watch the Demo" width="100%">
+  </a>
+  <p><em>Click the banner above to watch the 4-minute technical deep dive.</em></p>
+</div>
 
 ---
 
-## Technical Architecture (The "Secret Sauce")
+## 🛠 Problem & Solution
 
-SilkRoad pushes the boundaries of Solana by moving state management to the client-side (Stateless Architecture).
+### 🔴 The Problem: The "Glass House" Effect
+Institutional finance cannot function in a glass house. Current RWA protocols force a trade-off: **Privacy (Web2 Banks)** vs. **Liquidity (Web3 Markets)**.
+
+* **Metadata Leakage:** If a supplier mints an invoice for "Tesla" worth "$500,000" on a public chain, their competitors can scrape the chain and underbid them the next day.
+* **Cost Friction:** Managing thousands of invoices using standard Solana Token Accounts is expensive (~0.02 SOL per account in rent).
+* **Centralization Risk:** Existing "private" solutions often rely on off-chain databases, reintroducing the very trust assumptions blockchain was meant to solve.
+
+### 🟢 The Solution: Stateless ZK Privacy
+SilkRoad introduces a **Stateless** marketplace architecture where assets are compressed and private by default.
+
+* **🔒 Zero-Knowledge Privacy:** Invoice metadata is hashed locally (`SHA256`) with a salt. The chain only receives a validity proof, ensuring the raw data never leaves the client's device.
+* **📉 100x Lower Costs:** By utilizing **Light Protocol's State Merkle Trees**, minting a private asset costs **~0.001 SOL** (Rent-Exempt), making high-frequency factoring viable.
+* **⚡ Atomic Settlement:** Liquidity swaps occur in a single atomic transaction—money moves only if the asset moves.
+
+---
+
+## 💸 The Lifecycle of a Private Invoice
+
+This is how value moves through SilkRoad without leaking data:
+
+1.  **The Supplier (Minting):**
+    * Connects wallet and inputs invoice details (Client: "Tesla", Amount: $5k).
+    * **Frontend Action:** Generates a ZK Hash locally.
+    * **On-Chain:** Mints a **Compressed Account** via Light Protocol. The public sees a new leaf in the Merkle Tree, but cannot see "Tesla" or "$5k".
+
+2.  **The Liquidity Provider (Buying):**
+    * Views the marketplace. They see a "Risk Score" and "Yield" (verified by ZK proof) but not the raw data.
+    * **Action:** Clicks "Buy" and provides USDC/SOL.
+    * **Settlement:** The protocol executes an atomic swap. The LP receives the Compressed Asset; the Supplier receives the funds.
+
+3.  **The Settlement (Exit):**
+    * *Roadmap Feature:* When the Debtor (Tesla) pays the invoice via bank wire, a Fiat Oracle detects the payment.
+    * The protocol "burns" the Compressed Asset and releases the stablecoin principal + yield to the LP.
+
+---
+
+## ⚡ Technical Architecture
+
+SilkRoad leverages the cutting edge of Solana's privacy primitives. Unlike traditional dApps that rely on Rust programs for state management, SilkRoad pushes privacy to the edge.
 
 ### 1. ZK Compression Engine (Light Protocol)
-
-Instead of standard Anchor accounts, we interact with the **Light System Program**.
-
-* **Client-Side Hashing:** We generate a deterministic hash of the invoice data (Client + Amount + Salt) in the browser.
-* **State Compression:** This hash is stored as a "leaf" in a Concurrent Merkle Tree on-chain.
-* **Result:** The asset exists on Solana, but its contents are known only to the holder of the decryption key.
+We interact directly with the **Light System Program** to manage state.
+* **Client-Side Hashing:** The frontend generates a deterministic hash of the invoice data (Client + Amount + Salt).
+* **State Trees:** This hash is compressed into a leaf on Light Protocol's **State Merkle Tree**.
+* **The Result:** The on-chain footprint is just a validity proof.
 
 ### 2. High-Performance RPC (Helius)
-
-To enable a stateless frontend, we rely on **Helius RPCs** as our indexer.
-
-* `rpc.getCompressedAccountProof`: Fetches the Merkle proof needed to modify or transfer the asset.
-* `rpc.getStateTreeInfos`: Syncs the latest state root for valid ZK proofs.
-* This removes the need for a centralized backend database.
+ZK Compression requires advanced RPC methods to fetch validity proofs and state roots.
+* We utilize **Helius** to handle `rpc.getCompressedAccountProof` and `rpc.getStateTreeInfos`.
+* This allows the application to remain **Stateless** (Serverless), as the RPC acts as the indexer for the compressed state.
 
 ### 3. Atomic Compliance Layer (Simulation)
-
-We implement a "Check-then-Swap" flow. Before settlement, the protocol validates the Buyer's credentials (KYC/Accredited Status) via a simulation loop, ensuring regulatory compliance before the swap executes.
+The protocol includes a design for an **Atomic Compliance Layer**. Before settlement, the system validates the buyer's credentials (KYC/Accredited Status) to ensure regulatory compliance before the swap executes.
 
 ---
 
-## Tech Stack
+## 🛠 Tech Stack
 
 | Component | Technology | Description |
 | :--- | :--- | :--- |
@@ -89,57 +116,53 @@ We implement a "Check-then-Swap" flow. Before settlement, the protocol validates
 
 ---
 
-## How to Run Locally
+## 🚀 How to Run Locally
 
-Follow these steps to run the ZK Minting engine on your local machine.
+Follow these steps to spin up the ZK Minting engine on your local machine.
 
 ### Prerequisites
-
-- Node.js (v18+)
-- Yarn
-- A Helius API Key (Devnet)
+* Node.js (v18+)
+* Yarn
+* A Helius API Key (Devnet)
 
 ### Installation
 
-1. **Clone the Repo**
-   ```bash
-   git clone https://github.com/Abhishek222983101/silkroad-finance-zk.git
-   cd silkroad-finance-zk
-   ```
+1.  **Clone the Repository**
+    ```bash
+    git clone https://github.com/Abhishek222983101/silkroad-finance-zk.git
+    cd silkroad-finance-zk
+    ```
 
-2. **Install Dependencies**
-   ```bash
-   yarn install
-   ```
+2.  **Install Dependencies**
+    ```bash
+    yarn install
+    ```
 
-3. **Configure Environment**
-   Create a `.env.local` file in the root directory:
-   ```bash
-   echo "NEXT_PUBLIC_HELIUS_RPC=https://devnet.helius-rpc.com/?api-key=YOUR_KEY" > .env.local
-   ```
+3.  **Configure Environment**
+    Create a `.env.local` file in the root directory:
+    ```bash
+    echo "NEXT_PUBLIC_HELIUS_RPC=https://devnet.helius-rpc.com/?api-key=YOUR_KEY" > .env.local
+    ```
 
-4. **Run the App**
-   ```bash
-   yarn dev
-   ```
-
-Open `http://localhost:3000` to start minting private assets.
+4.  **Run the Application**
+    ```bash
+    yarn dev
+    ```
+    Open `http://localhost:3000` to start minting private assets.
 
 ---
 
-## Roadmap: Road to Mainnet
+## 🔮 Roadmap: Road to Mainnet
 
 The current version is a fully functional **Devnet Prototype** demonstrating the core ZK primitives. The path to Mainnet involves:
 
-1. **Pay-to-Reveal Logic:** Implementing an atomic encryption scheme where the "Buy" transaction triggers the secure release of the PDF decryption key to the buyer.
-
-2. **Fiat Oracle Integration:** Automating the exit liquidity flow by listening for off-chain bank wires (e.g., from the Debtor) to burn the asset and release stablecoins.
-
-3. **On-Chain Identity:** Replacing the frontend compliance check with **Civic/Reclaim** Verifiable Credentials for strict institutional whitelisting.
+1.  **Pay-to-Reveal Logic:** Implementing an atomic encryption scheme where the "Buy" transaction triggers the secure release of the PDF decryption key to the buyer.
+2.  **Fiat Oracle Integration:** Automating the exit liquidity flow by listening for off-chain bank wires (e.g., from the Debtor) to burn the asset and release stablecoins.
+3.  **On-Chain Identity:** Replacing the frontend compliance check with **Civic/Reclaim** Verifiable Credentials for strict institutional whitelisting.
 
 ---
 
 <div align="center">
-  <p>Built with mass mass mass mass by Abhishek Tiwari</p>
-  <p>Solana Privacy Hackathon 2026</p>
+  <p>Built with 🖤 by Abhishek Tiwari</p>
+  <p><strong>Solana Privacy Hackathon 2026</strong></p>
 </div>
