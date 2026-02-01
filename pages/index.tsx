@@ -297,7 +297,7 @@ const FloatingFooter = () => (
            <h4 className="font-bold text-white mb-5 text-sm uppercase tracking-wider">Connect</h4>
            <div className="flex space-x-4">
               <a href="https://twitter.com/Abhishekislinux" target="_blank" rel="noopener noreferrer" className="p-2 bg-white/5 rounded-full hover:bg-[#00E500]/20 hover:text-[#00E500] transition-all cursor-pointer relative z-50"><Twitter className="w-5 h-5"/></a>
-              <a href="https://github.com/Abhishek222983101/SilkRoad-Finance" target="_blank" rel="noopener noreferrer" className="p-2 bg-white/5 rounded-full hover:bg-[#00E500]/20 hover:text-[#00E500] transition-all cursor-pointer relative z-50"><Github className="w-5 h-5"/></a>
+              <a href="https://github.com/Abhishek222983101/silkroad-finance-zk" target="_blank" rel="noopener noreferrer" className="p-2 bg-white/5 rounded-full hover:bg-[#00E500]/20 hover:text-[#00E500] transition-all cursor-pointer relative z-50"><Github className="w-5 h-5"/></a>
               <a href="https://in.linkedin.com/in/abhishek-tiwari-345066294" target="_blank" rel="noopener noreferrer" className="p-2 bg-white/5 rounded-full hover:bg-[#00E500]/20 hover:text-[#00E500] transition-all cursor-pointer relative z-50"><Linkedin className="w-5 h-5"/></a>
            </div>
         </div>
