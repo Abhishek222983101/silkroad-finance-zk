@@ -11,6 +11,9 @@
   "dependencies": {
     "@coral-xyz/anchor": "^0.32.1",
     "@google/generative-ai": "^0.24.1",
+    "@lightprotocol/compressed-token": "^0.23.0-beta.5",
+    "@lightprotocol/stateless.js": "^0.22.0",
+    "@lightprotocol/zk-compression-cli": "^0.28.0-beta.5",
     "@radix-ui/react-slot": "^1.2.4",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
@@ -22,6 +25,7 @@
     "@types/three": "^0.182.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "crypto-js": "^4.2.0",
     "formidable": "^3.5.4",
     "framer-motion": "^12.26.2",
     "lucide-react": "^0.563.0",
@@ -36,6 +40,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/crypto-js": "^4.2.2",
     "@types/formidable": "^3.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
