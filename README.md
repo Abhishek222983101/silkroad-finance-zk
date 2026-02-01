@@ -53,14 +53,28 @@ Institutional finance cannot function in a glass house. Current RWA protocols fo
 
 * **Metadata Leakage:** If a supplier mints an invoice for "Tesla" worth "$500,000" on a public chain, their competitors can scrape the chain and underbid them the next day.
 * **Cost Friction:** Managing thousands of invoices using standard Solana Token Accounts is expensive (~0.02 SOL per account in rent).
-* **Centralization Risk:** Existing "private" solutions often rely on off-chain databases, reintroducing the very trust assumptions blockchain was meant to solve.
+* **Manual Audits:** Verifying invoice PDFs is slow, manual, and prone to human error.
 
-### 🟢 The Solution: Stateless ZK Privacy
-SilkRoad introduces a **Stateless** marketplace architecture where assets are compressed and private by default.
+### 🟢 The Solution: AI-Powered ZK Privacy
+SilkRoad introduces a **Stateless** marketplace architecture where assets are verified by AI and compressed by default.
 
 * **🔒 Zero-Knowledge Privacy:** Invoice metadata is hashed locally (`SHA256`) with a salt. The chain only receives a validity proof, ensuring the raw data never leaves the client's device.
-* **📉 100x Lower Costs:** By utilizing **Light Protocol's State Merkle Trees**, minting a private asset costs **~0.001 SOL** (Rent-Exempt), making high-frequency factoring viable.
-* **⚡ Atomic Settlement:** Liquidity swaps occur in a single atomic transaction—money moves only if the asset moves.
+* **🤖 Automated Auditing:** We use **Google Gemini 1.5 Flash** to scan uploaded PDFs, extracting data and assigning a "Fraud Risk Score" before minting.
+* **📉 100x Lower Costs:** By utilizing **Light Protocol's State Merkle Trees**, minting a private asset costs **~0.001 SOL** (Rent-Exempt).
+
+---
+
+## 🤖 AI-Powered Risk Engine
+
+Before an invoice is minted, it passes through our **GenAI Audit Layer**.
+
+1.  **PDF Extraction:** The supplier uploads an invoice PDF.
+2.  **Gemini 1.5 Flash Analysis:** We pipe the text to Google's Gemini 1.5 Flash model to:
+    * **Extract Metadata:** Automatically fills "Client Name", "Amount", and "Due Date" (No manual entry).
+    * **Fraud Detection:** Analyzes the document for inconsistencies, pixel manipulation, or fake addresses.
+    * **Risk Scoring:** Assigns a `Low`, `Medium`, or `High` risk score which is attached to the asset's metadata.
+
+> *Note: This ensures that while the data remains private, the "Quality" of the asset is verified by a neutral AI agent.*
 
 ---
 
@@ -69,8 +83,8 @@ SilkRoad introduces a **Stateless** marketplace architecture where assets are co
 This is how value moves through SilkRoad without leaking data:
 
 1.  **The Supplier (Minting):**
-    * Connects wallet and inputs invoice details (Client: "Tesla", Amount: $5k).
-    * **Frontend Action:** Generates a ZK Hash locally.
+    * Connects wallet and uploads invoice PDF.
+    * **AI Action:** Gemini scans PDF → Returns Data + Risk Score.
     * **On-Chain:** Mints a **Compressed Account** via Light Protocol. The public sees a new leaf in the Merkle Tree, but cannot see "Tesla" or "$5k".
 
 2.  **The Liquidity Provider (Buying):**
@@ -109,6 +123,7 @@ The protocol includes a design for an **Atomic Compliance Layer**. Before settle
 | Component | Technology | Description |
 | :--- | :--- | :--- |
 | **Privacy Engine** | **Light Protocol** | `Stateless.js` SDK & ZK Compression |
+| **AI Auditor** | **Gemini 1.5 Flash** | PDF Parsing & Fraud Detection |
 | **RPC Provider** | **Helius** | Compression-enabled RPC nodes |
 | **Frontend** | **Next.js 16** | React Framework with App Router |
 | **Styling** | **Tailwind CSS** | Responsive UI components |
@@ -124,6 +139,7 @@ Follow these steps to spin up the ZK Minting engine on your local machine.
 * Node.js (v18+)
 * Yarn
 * A Helius API Key (Devnet)
+* A Google Gemini API Key
 
 ### Installation
 
@@ -141,7 +157,11 @@ Follow these steps to spin up the ZK Minting engine on your local machine.
 3.  **Configure Environment**
     Create a `.env.local` file in the root directory:
     ```bash
-    echo "NEXT_PUBLIC_HELIUS_RPC=https://devnet.helius-rpc.com/?api-key=YOUR_KEY" > .env.local
+    # Get Helius Key: https://dev.helius.xyz/
+    # Get Gemini Key: https://aistudio.google.com/
+    
+    NEXT_PUBLIC_HELIUS_RPC=https://devnet.helius-rpc.com/?api-key=YOUR_HELIUS_KEY
+    GEMINI_API_KEY=YOUR_GEMINI_KEY
     ```
 
 4.  **Run the Application**
